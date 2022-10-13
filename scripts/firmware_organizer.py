@@ -13,6 +13,11 @@ def get_es_build_id():
         f.seek(0x40)
         return f.read(0x14).hex().upper()
 
+def get_ssl_build_id():
+    with open(ssluncompressed, 'rb') as f:
+        f.seek(0x40)
+        return f.read(0x14).hex().upper()
+
 def get_nifm_build_id():
     with open(nifmuncompressed, 'rb') as f:
         f.seek(0x40)
@@ -104,19 +109,20 @@ run(['hactool', '--intype=nca', '--exefsdir=firmware/titleid/0100000000000033/ex
 run(['hactool', '--intype=nso0', '--uncompressed=' + esuncompressed,
      'firmware/titleid/0100000000000033/exefs/main'])
 
+
+print('# Extracting SSL')
+ssluncompressed = 'uncompressed_ssl.nso0'
+run(['hactool', '--intype=nca', '--exefsdir=firmware/titleid/0100000000000024/exefs/',
+     'firmware/titleid/0100000000000024/Program.nca'])
+run(['hactool', '--intype=nso0', '--uncompressed=' + ssluncompressed,
+     'firmware/titleid/0100000000000024/exefs/main'])
+
 print('# Extracting NIFM')
 nifmuncompressed = 'uncompressed_nifm.nso0'
 run(['hactool', '--intype=nca', '--exefsdir=firmware/titleid/010000000000000f/exefs/',
      'firmware/titleid/010000000000000f/Program.nca'])
 run(['hactool', '--intype=nso0', '--uncompressed=' + nifmuncompressed,
      'firmware/titleid/010000000000000f/exefs/main'])
-
-print('# Extracting USB')
-usbuncompressed = 'uncompressed_usb.nso0'
-run(['hactool', '--intype=nca', '--exefsdir=firmware/titleid/0100000000000006/exefs/',
-     'firmware/titleid/0100000000000006/Program.nca'])
-run(['hactool', '--intype=nso0', '--uncompressed=' + usbuncompressed,
-     'firmware/titleid/0100000000000006/exefs/main'])
 
 print('# Extracting fat32')
 ncaParent = 'firmware/titleid/0100000000000819'
@@ -140,7 +146,7 @@ shutil.copyfile(ini1dir + '/FS.kip1', exfatcompressed)
 
 print('===== Printing relevant hashes and buildids =====')
 print('es build-id:', get_es_build_id())
+print('ssl build-id:', get_ssl_build_id())
 print('nifm build-id:', get_nifm_build_id())
-print('usb build-id:', get_usb_build_id())
 print('exfat sha256:', hashlib.sha256(open(exfatcompressed, 'rb').read()).hexdigest().upper())
 print('fat32 sha256:', hashlib.sha256(open(fat32compressed, 'rb').read()).hexdigest().upper())
