@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import hashlib
 import os
+import lz4.block
 
 VERBOSE = False
 
@@ -27,6 +28,11 @@ def get_usb_build_id():
     with open(usbuncompressed, 'rb') as f:
         f.seek(0x40)
         return f.read(0x14).hex().upper()
+
+def get_browser_ssl_build_id():
+    with open(browserssluncompressed, 'rb') as f:
+        f.seek(0x40)
+        return(f.read(0x14).hex().upper())
 
 def run(args):
     r = subprocess.run(args, capture_output=True)
@@ -109,6 +115,23 @@ run(['hactool', '--intype=nca', '--exefsdir=firmware/titleid/0100000000000033/ex
 run(['hactool', '--intype=nso0', '--uncompressed=' + esuncompressed,
      'firmware/titleid/0100000000000033/exefs/main'])
 
+print('# Extracting Browser SSL')
+browserssluncompressed = 'uncompressed_browser_ssl.nro'
+run(['hactool', '--intype=nca', '--romfsdir=firmware/titleid/0100000000000803/romfs/',
+     'firmware/titleid/0100000000000803/Data.nca'])
+
+with open('firmware/titleid/0100000000000803/romfs/nro/netfront/core_2/default/cfi_enabled/webkit_wkc.nro.lz4', 'rb') as browsersslf:
+    # note the path for this seems to change often
+    #12 and below firmware/titleid/0100000000000803/romfs/nro/netfront/dll_1/webkit_wkc.nro.lz4
+    #13.2.1 to X firmware/titleid/0100000000000803/romfs/nro/netfront/core_1/webkit_wkc.nro.lz4
+    #15 firmware/titleid/0100000000000803/romfs/nro/netfront/core_2/default/cfi_enabled/webkit_wkc.nro.lz4
+    browser_ssl_size = int.from_bytes(browsersslf.read(4), "little")
+    browsersslf.seek(4)
+    read_data = browsersslf.read(browser_ssl_size)
+    decompress_nro = open('uncompressed_browser_ssl.nro', 'wb')
+    decompress_nro.write(lz4.block.decompress(read_data, uncompressed_size=browser_ssl_size))
+    decompress_nro.close()
+    browsersslf.close()
 
 print('# Extracting SSL')
 ssluncompressed = 'uncompressed_ssl.nso0'
@@ -148,5 +171,6 @@ print('===== Printing relevant hashes and buildids =====')
 print('es build-id:', get_es_build_id())
 print('ssl build-id:', get_ssl_build_id())
 print('nifm build-id:', get_nifm_build_id())
+print('browser-ssl build-id:', get_browser_ssl_build_id())
 print('exfat sha256:', hashlib.sha256(open(exfatcompressed, 'rb').read()).hexdigest().upper())
 print('fat32 sha256:', hashlib.sha256(open(fat32compressed, 'rb').read()).hexdigest().upper())

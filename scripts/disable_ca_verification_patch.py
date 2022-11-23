@@ -16,6 +16,6 @@ with open('uncompressed_ssl.nso0', 'rb') as fi:
     patch4 = '%08X%s%s' % (result4.end(), '0004', '08008052')
     text_file = open(get_build_id() + '.ips', 'wb')
     print('ssl build-id: ' + get_build_id())
-    print('ssl offsets and patches at: ' + patch1 + patch2 + patch3 + patch4)
+    print('disable_ca_verification offsets and patches at: ' + patch1 + patch2 + patch3 + patch4)
     text_file.write(bytes.fromhex(str(f'4950533332' + patch1 + patch2 + patch3 + patch4 + '45454F46')))
     text_file.close()
