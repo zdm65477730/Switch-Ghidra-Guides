@@ -14,5 +14,7 @@ This repository does not host, nor contain guides or scripts to circumvent secur
 * a script to organize firmware files, for use with ghidra. And a script to generate a "patch" for atmosphere's "loader":
   - Python script to generate patches for Atmospheres open-source loader re-implementation, requires lz4 from pip, usage: use "python scripts/atmosphere_loader_patch.py" and it will automatically download, make patches, then clean up after itself. [(link)](scripts/atmosphere_loader_patch.py)
   - Python script to process dumped FW files from system partition and organize then output binaries of interest, Usage: create a folder called "firmware", put firmware .ncas inside of the "firmware" folder then use "python scripts/firmware_organizer.py." [(link)](scripts/firmware_organizer.py)
+  - Python script to generate the "[disable_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-ca-verification)", [(link)](scripts/disable_ca_verification_patch.py)
+  - Python script to generate the "[disable_browser_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-browser-ca-verification)", [(link)](scripts/disable_browser_ca_verification_patch.py)
 
 * Credits: [@borntohonk](https://github.com/borntohonk)
