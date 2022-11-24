@@ -16,5 +16,6 @@ This repository does not host, nor contain guides or scripts to circumvent secur
   - Python script to process dumped FW files from system partition and organize then output binaries of interest, Usage: create a folder called "firmware", put firmware .ncas inside of the "firmware" folder then use "python scripts/firmware_organizer.py." [(link)](scripts/firmware_organizer.py)
   - Python script to generate the "[disable_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-ca-verification)", [(link)](scripts/disable_ca_verification_patch.py)
   - Python script to generate the "[disable_browser_ca_verification patch](https://github.com/misson20000/exefs_patches#disable-browser-ca-verification)", [(link)](scripts/disable_browser_ca_verification_patch.py)
+  - Python script to generate the "[nifm_ctest patch](https://github.com/misson20000/exefs_patches#nifm-ctest)", [(link)](scripts/nifm_ctest_patch.py)
 
 * Credits: [@borntohonk](https://github.com/borntohonk)
